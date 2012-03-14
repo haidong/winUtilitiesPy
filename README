@@ -1,0 +1,9 @@
+Managing Windows services with sysinternals tools and Python
+
+Working with Windows, one frequently needs to manage various services: finding their status, startup modes, startup accounts, stopping them, starting them, restarting them, etc. One can manage all this via a GUI tool by runninng "services.msc" manually, which is useful and handy. But manual method does not scale and is error prone. For example, when it comes time to stop and patch certain service on many servers, it is nice to have a proven, automated way of managing them.
+
+For that, we need command line tools and automation. On the command line, Windows has NET commands, sc.exe from the Resource Kit, and psservice.exe from Sysinternals. Those are the set of tools I've used. Of the three, I like psservice the best, because it supports managing servers remotely and is easy to install (unzipping and no registry and directory pollution).
+
+I am aware of pywin32 and winsys, but so far my needs have been met by running psservice and parsing its output. I may try that but this is what I have now. It is pretty useful to me and I hope you think the same way.
+
+Learning PowerShell may also be a good idea.
