@@ -18,15 +18,6 @@ class winUtilityTest(unittest.TestCase):
 	#@unittest.skip("don't run this one if you don't have a named instance called MSSQL$SQLEXPRESS with Network Service as its startup account")
 	def test_getServiceStartupAccount_namedInstance(self):
 		self.assertEqual(winUtility.getServiceStartupAccount('MSSQL$SQLEXPRESS', 'LocalHost').upper(), 'NT AUTHORITY\\NETWORK SERVICE')
-	#@unittest.skip("don't run this one if you don't have a remote server called remoteServer")
-	def test_getServiceStartupAccount_withLoginPassword(self):
-		self.assertEqual(winUtility.getServiceStartupAccount('Dhcp', 'remoteServer', login='myDomain\\myLogin', password='myPassword').upper(), 'NT AUTHORITY\\LOCALSERVICE')
-	def test_getServiceStartupAccount_withLoginPassword_junk(self):
-		self.assertEqual(winUtility.getServiceStartupAccount('junk', 'remoteServer', login='myDomain\\myLogin', password='myPassword'), None)
-	#@unittest.skip("don't run this one if you don't have the IP address used")
-	def test_getServiceStartupAccount_withLoginPasswordUsingIPAddress(self):
-		self.assertEqual(winUtility.getServiceStartupAccount('Dhcp', '10.224.150.149', login='myDomain\\myLogin', password='myPassword').upper(), 'NT AUTHORITY\\LOCALSERVICE')
-
 
 	def test_getServiceStartupType_dhcp(self):
 		self.assertEqual(winUtility.getServiceStartupType('Dhcp', 'LocalHost'), 'AUTO_START')
@@ -35,15 +26,6 @@ class winUtilityTest(unittest.TestCase):
 	#@unittest.skip("don't run this one if you don't have a named instance called MSSQL$SQLEXPRESS with Network Service as its startup account")
 	def test_getServiceStartupType_namedInstance(self):
 		self.assertEqual(winUtility.getServiceStartupType('MSSQL$SQLEXPRESS', 'LocalHost').upper(), 'AUTO_START')
-	#@unittest.skip("don't run this one if you don't have a remote server called remoteServer")
-	def test_getServiceStartupType_withLoginPassword(self):
-		self.assertEqual(winUtility.getServiceStartupType('Dhcp', 'remoteServer', login='myDomain\\myLogin', password='myPassword').upper(), 'AUTO_START')
-	def test_getServiceStartupType_withLoginPassword_junk(self):
-		self.assertEqual(winUtility.getServiceStartupType('junk', 'remoteServer', login='myDomain\\myLogin', password='myPassword'), None)
-	#@unittest.skip("don't run this one if you don't have the IP address used")
-	def test_getServiceStartupType_withLoginPasswordUsingIPAddress(self):
-		self.assertEqual(winUtility.getServiceStartupType('Dhcp', '10.224.150.149', login='myDomain\\myLogin', password='myPassword').upper(), 'AUTO_START')
-
 
 	def test_getServiceState_dhcp(self):
 		self.assertEqual(winUtility.getServiceState('Dhcp', 'LocalHost'), 'RUNNING')
@@ -52,14 +34,6 @@ class winUtilityTest(unittest.TestCase):
 	#@unittest.skip("don't run this one if you don't have a named instance called MSSQL$SQLEXPRESS")
 	def test_getServiceState_namedInstance(self):
 		self.assertEqual(winUtility.getServiceState('MSSQL$SQLEXPRESS', 'LocalHost').upper(), 'RUNNING')
-	#@unittest.skip("don't run this one if you don't have a remote server called remoteServer")
-	def test_getServiceState_withLoginPassword(self):
-		self.assertEqual(winUtility.getServiceState('Dhcp', 'remoteServer', login='myDomain\\myLogin', password='myPassword').upper(), 'RUNNING')
-	def test_getServiceState_withLoginPassword_junk(self):
-		self.assertEqual(winUtility.getServiceState('junk', 'remoteServer', login='myDomain\\myLogin', password='myPassword'), None)
-	#@unittest.skip("don't run this one if you don't have the IP address used")
-	def test_getServiceState_withLoginPasswordUsingIPAddress(self):
-		self.assertEqual(winUtility.getServiceState('Dhcp', '10.224.150.149', login='myDomain\\myLogin', password='myPassword').upper(), 'RUNNING')
 
 
 	def test_setServiceStatus_ALG(self):
@@ -73,16 +47,6 @@ class winUtilityTest(unittest.TestCase):
 		self.assertTrue(winUtility.setServiceStatus('ALG', 'LocalHost', 'stop'))
 		self.assertEqual(winUtility.getServiceState('ALG', 'LocalHost'), 'STOPPED')
 
-	def test_setServiceStatus_ALG_withLoginPassword(self):
-		self.assertTrue(winUtility.setServiceStatus('ALG', 'remoteServer', 'stop', login='myDomain\\myLogin', password='myPassword'))
-		self.assertEqual(winUtility.getServiceState('ALG', 'remoteServer', login='myDomain\\myLogin', password='myPassword'), 'STOPPED')
-		self.assertTrue(winUtility.setServiceStatus('ALG', 'remoteServer', 'start', login='myDomain\\myLogin', password='myPassword'))
-		self.assertEqual(winUtility.getServiceState('ALG', 'remoteServer', login='myDomain\\myLogin', password='myPassword'), 'RUNNING')
-		self.assertTrue(winUtility.setServiceStatus('ALG', 'remoteServer', 'restart', login='myDomain\\myLogin', password='myPassword'))
-		self.assertEqual(winUtility.getServiceState('ALG', 'remoteServer', login='myDomain\\myLogin', password='myPassword'), 'RUNNING')
-		self.assertTrue(winUtility.setServiceStatus('ALG', 'remoteServer', 'stop', login='myDomain\\myLogin', password='myPassword'))
-
-		self.assertEqual(winUtility.getServiceState('ALG', 'remoteServer', login='myDomain\\myLogin', password='myPassword'), 'STOPPED')
 
 	def test_setServiceStartupType_ALG(self):
 		self.assertTrue(winUtility.setServiceStartupType('ALG', 'LocalHost', 'auto'))
@@ -95,15 +59,3 @@ class winUtilityTest(unittest.TestCase):
 		self.assertTrue(winUtility.setServiceStartupType('ALG', 'LocalHost', 'automatic'))
 		self.assertEqual(winUtility.getServiceStartupType('ALG', 'LocalHost'), 'AUTO_START (DELAYED)')
 		self.assertTrue(winUtility.setServiceStartupType('ALG', 'LocalHost', 'manual'))
-
-	def test_setServiceStartupType_ALG_withLoginPassword(self):
-		self.assertTrue(winUtility.setServiceStartupType('ALG', 'LocalHost', 'auto', login='myDomain\\myLogin', password='myPassword'))
-		self.assertFalse(winUtility.setServiceStartupType('ALG', 'LocalHost', 'junk', login='myDomain\\myLogin', password='myPassword'))
-		self.assertEqual(winUtility.getServiceStartupType('ALG', 'LocalHost', login='myDomain\\myLogin', password='myPassword'), 'AUTO_START (DELAYED)')
-		self.assertTrue(winUtility.setServiceStartupType('ALG', 'LocalHost', 'manual', login='myDomain\\myLogin', password='myPassword'))
-		self.assertEqual(winUtility.getServiceStartupType('ALG', 'LocalHost', login='myDomain\\myLogin', password='myPassword'), 'DEMAND_START')
-		self.assertTrue(winUtility.setServiceStartupType('ALG', 'LocalHost', 'disabled', login='myDomain\\myLogin', password='myPassword'))
-		self.assertEqual(winUtility.getServiceStartupType('ALG', 'LocalHost', login='myDomain\\myLogin', password='myPassword'), 'DISABLED')
-		self.assertTrue(winUtility.setServiceStartupType('ALG', 'LocalHost', 'automatic', login='myDomain\\myLogin', password='myPassword'))
-		self.assertEqual(winUtility.getServiceStartupType('ALG', 'LocalHost', login='myDomain\\myLogin', password='myPassword'), 'AUTO_START (DELAYED)')
-		self.assertTrue(winUtility.setServiceStartupType('ALG', 'LocalHost', 'manual', login='myDomain\\myLogin', password='myPassword'))

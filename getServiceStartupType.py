@@ -1,5 +1,5 @@
 import argparse
-from winUtility import getServiceState
+from winUtility import getServiceStartupType
 
 parser = argparse.ArgumentParser(description='Get service status')
 parser.add_argument('-f', '--fileInput', help='The presence of this parameter indicates server names come from a file',  action='store_true', default=False, dest='fileInput')
@@ -14,8 +14,8 @@ if argList.fileInput:
 else:
 	serverList = argList.iInput.split(',')
 
-serviceStatus = {}
+startupType = {}
 for server in serverList:
-	serviceStatus[server.strip()] = getServiceState(argList.sService, server.strip())
+	startupType[server.strip()] = getServiceStartupType(argList.sService, server.strip())
 
-print serviceStatus
+print startupType
