@@ -2,8 +2,28 @@ Managing Windows services with sysinternals tools and Python
 
 Working with Windows, one frequently needs to manage various services: finding their status, startup modes, startup accounts, stopping them, starting them, restarting them, etc. One can manage all this via a GUI tool by runninng "services.msc" manually, which is useful and handy. But manual method does not scale and is error prone. For example, when it comes time to stop and patch certain service on many servers, it is nice to have a proven, automated way of managing them.
 
-For that, we need command line tools and automation. On the command line, Windows has NET commands, sc.exe from the Resource Kit, and psservice.exe from Sysinternals. Those are the set of tools I've used. Of the three, I like psservice the best, because it supports managing servers remotely and is easy to install (unzipping and no registry and directory pollution).
+For that, we need command line tools and automation. On the command line, Windows has NET commands, sc.exe from the Resource Kit, and psservice.exe from Sysinternals. Those are the set of tools I've used. Of the three, I like psservice the best, because it supports managing servers remotely and is easy to install (unzipping and no registry and directory pollution). Yes, I am aware of PowerShell, pywin32, etc., but that is not the focus of this project.
 
-I am aware of pywin32 and winsys, but so far my needs have been met by running psservice and parsing its output. I may try that but this is what I have now. It is pretty useful to me and I hope you think the same way.
+winServicePy combines Python and Sysinternal tools, psservice in particular, to manage Windows services easily across many servers in a company. All base functions in winUtility.py have been tested with unittest module. Tests are included in the tests folder.
 
-Learning PowerShell may also be a good idea.
+Prerequisites:
+1. Python 2.7;
+2. Sysinternals tools in PATH;
+3. Access to an administrative login on the servers you are trying to manage, and run all utilities under that Administrative login account.
+Initially I coded functions that accepted login and passwords, but due to the fact that password can contain all sorts of characters, thus making it very hard to escape, I gutted that function. The code that includes login and password parameters is tagged, as you can see in github.
+
+These set of tools can do 5 things:
+1. getServiceAccount.py. Get service startup account;
+2. getServiceStartupType. Get service startup mode;
+3. getServiceStatus. Get service running status;
+4. setServiceStartupType.py. Set service startup mode auto|manual|disabled
+5. setServiceStatus.py. Set service status by issuing STOP|START|RESTART command
+
+Usage:
+Running python scriptName.py without any parameters gives the usage information. All 5 scripts accept at least 3 switches:
+
+-f is a boolean switch. The presence of which indicates the input is a file.
+-i is input for the script. If -f is present, then this should be a file that contains servers you want to manage, each one occupies its own line in the file. If -f is absent, then you can enter server names on command line, separated by a single comma only.
+-s is service name. To find out a server name, go to service.msc and look at the service's property.
+-t, only available for setServiceStartupType.py, indicate the startup mode you want the service to be in. Possible choices are auto, manual, and disabled.
+-a, only availabel for setServiceStatus.py, indicate if you want to stop, start, or restart the service. Possible choices are stop, start, and restart.
