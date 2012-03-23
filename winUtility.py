@@ -143,3 +143,24 @@ def setServiceStartupType(service, server, startupType):
 			return True
 	
 	return False
+
+def getDiskVolumeInfo(server):
+	"""Getting disk volume info (no mount point) by parsing output of
+	psinfo -d Volume \\server
+	"""
+	cmd = """psinfo -d Volume \\\\%s""" % server.strip()
+
+	returnCode, stdOut, stdErr = runCmd(cmd)
+	fixedDisk = re.compile(r'\s+([A-Z]):\sFixed\s+(\w+)\s+(.*?)(\d+\.\d+\s\w\w)\s+(\d+\.\d+\s\w\w)\s+(\d+\.\d+%).*$', re.IGNORECASE)
+	diskInfoList = []
+	for line in stdOut.split('\n'):
+		reResult = fixedDisk.search(line)
+		if reResult:
+			drive = {"driveLetter":reResult.group(1), "format":reResult.group(2), "description":reResult.group(3), "totalSize":reResult.group(4), "availableSize":reResult.group(5), "percentFree":reResult.group(6)}
+			diskInfoList.append(drive)
+	
+	print diskInfoList
+	if len(diskInfoList) == 0:
+		return None
+	else:
+		return diskInfoList

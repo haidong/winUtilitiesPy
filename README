@@ -18,6 +18,7 @@ These set of tools can do 5 things:
 3. getServiceStatus. Get service running status;
 4. setServiceStartupType.py. Set service startup mode auto|manual|disabled
 5. setServiceStatus.py. Set service status by issuing STOP|START|RESTART command
+6. getDiskvolumeInfo.py. Get disk volume information using psinfo -d and then parse the output. It cannot get mount point info as of yet, because psinfo doesn't do it.
 
 Usage:
 Running python scriptName.py without any parameters gives the usage information. All 5 scripts accept at least 3 switches:

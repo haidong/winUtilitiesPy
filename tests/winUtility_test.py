@@ -59,3 +59,8 @@ class winUtilityTest(unittest.TestCase):
 		self.assertTrue(winUtility.setServiceStartupType('ALG', 'LocalHost', 'automatic'))
 		self.assertEqual(winUtility.getServiceStartupType('ALG', 'LocalHost'), 'AUTO_START (DELAYED)')
 		self.assertTrue(winUtility.setServiceStartupType('ALG', 'LocalHost', 'manual'))
+
+
+	def test_getDiskVolumeInfo(self):
+		self.assertEqual(winUtility.getDiskVolumeInfo('LocalHost')[0]['driveLetter'], 'C')
+		self.assertEqual(winUtility.getDiskVolumeInfo('junk'), None)
