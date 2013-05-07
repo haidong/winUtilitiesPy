@@ -1,5 +1,7 @@
 import unittest
-from .. import winUtility
+import sys, os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'winUtility'))
+import winUtility
 
 class winUtilityTest(unittest.TestCase):
 
